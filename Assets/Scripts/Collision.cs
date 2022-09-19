@@ -15,11 +15,11 @@ public class Collision : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Cube1"))
         {
-            Destroy(collision.gameObject);
+            Destroy(gameObject);
         }
         else if (collision.gameObject.CompareTag("Cube2")) { 
         
-        Destroy(collision.gameObject);
+        Destroy(gameObject);
         }
     }
 }

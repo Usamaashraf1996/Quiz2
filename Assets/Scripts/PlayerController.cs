@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -9,16 +10,21 @@ public class PlayerController : MonoBehaviour
    // public GameObject projectilePrefabs;
     public bool gameOver=false;
     public float xRange = 10f;
+    public static PlayerController instance;
+    public Ray mouseRay;
+    Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
-        playerRb = GetComponent<Rigidbody>();   
+        instance = this;
+        playerRb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
         if (transform.position.x < -xRange)
         {
             transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
@@ -27,29 +33,14 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
         }
-        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         float midPoint = (transform.position - Camera.main.transform.position).magnitude * 0.5f;
         transform.LookAt(mouseRay.origin + mouseRay.direction * midPoint);
-        //for prjectile launch from player
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //  //transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        //    playerRb.AddForce(Vector3.forward * speed*4, ForceMode.Impulse);
-        //     playerRb.AddForce(transform.forward * speed);
-        //    Debug.Log("Work");
-        //    Instantiate(projectilePrefabs, transform.position, projectilePrefabs.transform.rotation);
-        //}
+        transform.localRotation = Quaternion.Euler(0, transform.localRotation.y, 0);
+        if (Input.GetMouseButtonDown(0)) {
+            rb.AddForce(PlayerController.instance.mouseRay.direction, ForceMode.Impulse);
+        }
+       
     }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Cube1"))
-    //    {
-    //        gameOver = true;
-    //        Destroy(gameObject);
-    //    }
-    //    else if (collision.gameObject.CompareTag("Cube2")) {
-    //        gameOver = true;
-    //        Destroy(gameObject);
-    //    }
-    //}
+   
 }
